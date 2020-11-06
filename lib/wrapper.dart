@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import './models/user.dart';
+import './screens/homePage.dart';
 import './screens/authScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -59,8 +60,6 @@ class _WrapperState extends State<Wrapper> {
               _dob=json.decode(value.body)['dob'];
             });
             print(json.decode(value.body));
-            //print(_userToken);
-            //print(_userName);
             return resp;
       });
     }
@@ -136,7 +135,7 @@ class _WrapperState extends State<Wrapper> {
   @override
   Widget build(BuildContext context) {
     return Scaffold( 
-      body: _userToken=='' || _userToken==null ? AuthScreen(submitUserDetails,loginUser,_isLoading) : Center(child: Text('Logged in Successfully')),
+      body: _userToken=='' || _userToken==null ? AuthScreen(submitUserDetails,loginUser,_isLoading) : HomePage(User(dob: _dob, email: _email, fName: _fName, lName: _lName, mobile: _phone, upiId: _upiId, token: _userToken)),
     );
   }
 }
