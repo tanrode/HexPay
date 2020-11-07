@@ -12,30 +12,28 @@ enum Category{
 class Shop
 {
   final String fName;
-  //final String lName;
-  //final String email;
+  final String lName;
+  final String email;
   final String upi;
   final String ph;
-  //final String password;
+  final String password;
   final String shopName;
   final String gstNo;
-  //final String addr1;
-  //final String addr2;
+  final String landmark;
   final String city;
   final String pinCode;
-  final Category category;
+  final String category;
   final String shopImg;
 
   const Shop({
-    //@required this.addr1,
-    //@required this.addr2,
+    @required this.landmark,
     @required this.category,
     @required this.city,
-    //@required this.email,
+    @required this.email,
     @required this.fName,
     @required this.gstNo,
-    //@required this.lName,
-    //@required this.password,
+    @required this.lName,
+    @required this.password,
     @required this.ph,
     @required this.pinCode,
     @required this.shopImg,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/custAnalytics.dart';
 import './user.dart';
 
 class SideDrawer extends StatelessWidget {
@@ -6,7 +7,9 @@ class SideDrawer extends StatelessWidget {
   SideDrawer(this.user);
   void getAnalytics(BuildContext ctx)
   {
-    
+    Navigator.of(ctx).push(new MaterialPageRoute(builder: (ctx1){
+      return CustomerAnalytics(user.fName);
+    }));
   }
 
   void getHistory(BuildContext ctx)
@@ -51,17 +54,6 @@ class SideDrawer extends StatelessWidget {
             onTap: () => getCredit(context),
             leading: Icon(Icons.credit_card,size: 24,), title: Text('Purchases on Credit',style: TextStyle(fontFamily: 'RobotoCondensed',fontSize:22,fontWeight: FontWeight.bold),),
           ),
-          FlatButton(
-            color: Colors.black87,
-            onPressed: () {
-              
-            },
-            child: Text('Logout',style: TextStyle(color: Colors.white),)),
-          FlatButton(
-            onPressed: () {
-              
-            },
-            child: Text('Change Password')),
         ],
       ),
     );

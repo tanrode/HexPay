@@ -3,6 +3,10 @@ import '../models/shop.dart';
 import '../models/sideDrawer.dart';
 import '../widgets/shopItem.dart';
 import '../models/user.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
+
 
 class HomePage extends StatefulWidget {
   final User user;
@@ -15,10 +19,14 @@ class _HomePageState extends State<HomePage> {
   final shopList = const[
     Shop(
       fName: 'Rakesh',
-      upi: 'suvarna.vr-1@okhdfcbank',
+      lName: 'Verma',
+      email: 'rv@hmail.com',
+      password: '1234567',
+      landmark: 'BEL',
+      upi: 'omkar.masur@okicici',
       gstNo: '000123456789',
       shopName: 'BBQ Nation',
-      category: Category.Restaurant,
+      category: 'Restaurant',
       city: 'Bangalore',
       pinCode: '560012',
       ph: '8889991112',
@@ -26,10 +34,14 @@ class _HomePageState extends State<HomePage> {
     ),
     Shop(
       fName: 'Mukesh',
+      lName: 'Verma',
+      email: 'mv@hmail.com',
+      password: '1234567',
+      landmark: 'BEML',
       upi: 'v.tanmay13@okicici',
       gstNo: '000123456789',
       shopName: 'Pantaloons',
-      category: Category.Clothing,
+      category: 'Clothing',
       city: 'Bangalore',
       pinCode: '560021',
       ph: '4442226718',
@@ -37,10 +49,14 @@ class _HomePageState extends State<HomePage> {
     ),
     Shop(
       fName: 'Jayesh',
+      lName: 'Verma',
+      email: 'jv@hmail.com',
+      password: '1234567',
+      landmark: 'HAL',
       upi: 'jayesh@okicici',
       gstNo: '000123456789',
       shopName: 'Shopper\'s Stop',
-      category: Category.Clothing,
+      category: 'Clothing',
       city: 'Bangalore',
       pinCode: '560016',
       ph: '7689994562',
@@ -48,17 +64,45 @@ class _HomePageState extends State<HomePage> {
     ),
     Shop(
       fName: 'Hitesh',
+      lName: 'Verma',
+      email: 'hv@hmail.com',
+      password: '1234567',
+      landmark: 'NAL',
       upi: 'hitesh@okhdfcbank',
       gstNo: '000123456789',
       shopName: 'Big Bazaar',
-      category: Category.Grocery,
+      category: 'Grocery',
       city: 'Bangalore',
       pinCode: '560056',
       ph: '9876856565',
       shopImg: 'https://gumlet.assettype.com/nationalherald/2020-03/856a1f7a-bcbe-4609-bfe9-300161413b61/big_bazaar_1571403097.jpg?w=1200&h=696',
     ),
     ];
-
+  Future getShops() async
+  {
+    final shops = await http.get('https://omi123.pythonanywhere.com/api/user/get_shops');
+    //final currUser = json.decode(users.body) as Map<String, dynamic>;
+    print(json.decode(shops.body));
+    dynamic currShop = json.decode(shops.body);
+    // currShop.forEach((element) { 
+    //   print(element);
+    // });
+    //print(currShop);
+    // currUser.forEach((key, value) {
+    //   if(value['uid'] == uid)
+    //   {
+    //     print(value['name']);
+    //     return User(uid: uid,name: value['name'],phNo: value['phNo'],email: value['email'],password: value['password']);
+    //     // return cUser;
+    //     //return value;
+    //   }
+    // });
+  }
+  void initState()
+  {
+    getShops();
+    super.initState();
+  }
   String userResp='';
   List<Shop> instList=[];
   bool showList=false;
@@ -100,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                             crossAxisSpacing: 0,
                             childAspectRatio: 1.75 / 2),
                         itemBuilder: (ctx,ind){
-                          return ShopItem(category: instList[ind].category, city: instList[ind].city, fName: instList[ind].fName , gstNo: instList[ind].gstNo , ph: instList[ind].ph , pinCode: instList[ind].pinCode , shopImg: instList[ind].shopImg , shopName: instList[ind].shopName , upi: instList[ind].upi );
+                          return ShopItem(landmark: instList[ind].landmark, lName: instList[ind].lName, email: instList[ind].email, password: instList[ind].password ,category: instList[ind].category, city: instList[ind].city, fName: instList[ind].fName , gstNo: instList[ind].gstNo , ph: instList[ind].ph , pinCode: instList[ind].pinCode , shopImg: instList[ind].shopImg , shopName: instList[ind].shopName , upi: instList[ind].upi,user: widget.user);
                         },
                       ),
               ),

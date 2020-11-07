@@ -7,9 +7,10 @@ import '../models/shop.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AuthScreen extends StatefulWidget {
-  AuthScreen(this.submitFn,this.loginUser,this.isLoading);
+  AuthScreen(this.submitFn,this.loginUser,this.registerBusiness,this.isLoading);
   final void Function(String mobile,String email,String fName,String lName,String userUpi,String password,String dob,bool isLogin,BuildContext ctx) submitFn;
   final void Function (String mobile,String password,bool isLogin,BuildContext ctx) loginUser;
+  final void Function (String fName,String lName,String email,String upiId,String password,String shopName,String gstNumber,String landmark,String city,String pincode,String typeOfBusiness,String phone,File image,bool isLogin,BuildContext ctx) registerBusiness;
   final bool isLoading;
   @override
   _AuthScreenState createState() => _AuthScreenState();
@@ -17,7 +18,6 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String _userMobile = '';
   String _userEmail = '';
   String _firstName = '';
   String _lastName = '';
@@ -25,13 +25,14 @@ class _AuthScreenState extends State<AuthScreen> {
   String _userDob = '';
   String _password = '';
   String _confirmPassword='';
+  String mobile='';
 
   String _shopName = '';
   String _gstNumber = '';
   String _shopArea = '';
   String _shopCity = '';
   String _shopPinCode = '';
-  Category _shopType;
+  String _shopType;
   bool isLogin = true;
   bool isUser=false;
   bool isBusiness=false;
@@ -123,8 +124,8 @@ class _AuthScreenState extends State<AuthScreen> {
                       },
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(labelText: 'Registered Mobile Number'),
-                      onSaved: (value) {
-                        _userMobile = value;
+                      onChanged: (value) {
+                        mobile=value;
                       },
                     ),
                     if(!isLogin)
@@ -217,12 +218,12 @@ class _AuthScreenState extends State<AuthScreen> {
                         children: <Widget>[
                           Text('Type of Business: ',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18)),
                           SizedBox(width: 8),
-                          DropdownButton(value: _value, items: [ DropdownMenuItem(child: Text('Restaurant'), value: 1, onTap: ()=> _shopType=Category.Restaurant,), 
-                          DropdownMenuItem(child: Text('Clothing'), value: 2, onTap: ()=> _shopType=Category.Clothing),
-                          DropdownMenuItem(child: Text('Grocery'), value: 3, onTap: ()=> _shopType=Category.Grocery),
-                          DropdownMenuItem(child: Text('Medical'), value: 4, onTap: ()=> _shopType=Category.Medical),
-                          DropdownMenuItem(child: Text('General'), value: 5, onTap: ()=> _shopType=Category.General),
-                          DropdownMenuItem(child: Text('Others'), value: 6, onTap: ()=> _shopType=Category.Others)],
+                          DropdownButton(value: _value, items: [ DropdownMenuItem(child: Text('Restaurant'), value: 1, onTap: ()=> _shopType='Restaurant',), 
+                          DropdownMenuItem(child: Text('Clothing'), value: 2, onTap: ()=> _shopType='Clothing'),
+                          DropdownMenuItem(child: Text('Grocery'), value: 3, onTap: ()=> _shopType='Grocery'),
+                          DropdownMenuItem(child: Text('Medical'), value: 4, onTap: ()=> _shopType='Medical'),
+                          DropdownMenuItem(child: Text('General'), value: 5, onTap: ()=> _shopType='General'),
+                          DropdownMenuItem(child: Text('Others'), value: 6, onTap: ()=> _shopType='Others')],
                           onChanged: (val){
                             setState(() {
                               _value=val;
@@ -316,8 +317,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             FocusScope.of(context)
                                 .unfocus(); // To pop the virtual keyboard
                             if (validity) _formKey.currentState.save();
-                            if(isUser) widget.submitFn(_userMobile.trim(), _userEmail.trim(),_firstName.trim(),_lastName.trim(),_userUPI.trim(),_password.trim(),_userDob.trim(),isLogin,context);
-                            if(isLogin) widget.loginUser(_userMobile.trim(),_password.trim(),isLogin,context);
+                            if(isUser) widget.submitFn(mobile.trim(), _userEmail.trim(),_firstName.trim(),_lastName.trim(),_userUPI.trim(),_password.trim(),_userDob.trim(),isLogin,context);
+                            if(isBusiness) widget.registerBusiness(_firstName,_lastName,_userEmail,_userUPI,_password,_shopName,_gstNumber,_shopArea,_shopCity,_shopPinCode,_shopType,mobile,_image,isLogin,context);
+                            if(isLogin) widget.loginUser(mobile.trim(),_password.trim(),isLogin,context);
                           }),
                     if(!widget.isLoading)
                       isLogin ? Row(

@@ -1,68 +1,69 @@
 import 'package:flutter/material.dart';
 import '../screens/paymentMode.dart';
 import '../models/shop.dart';
+import '../models/user.dart';
 
 class ShopItem extends StatelessWidget {
   final String fName;
-  //final String lName;
-  //final String email;
+  final String lName;
+  final String email;
   final String upi;
   final String ph;
-  //final String password;
+  final String password;
   final String shopName;
   final String gstNo;
-  //final String addr1;
-  //final String addr2;
+  final String landmark;
   final String city;
   final String pinCode;
-  final Category category;
+  final String category;
   final String shopImg;
+  final User user;
 
   ShopItem(
       {
-        //@required this.addr1,
-        //@required this.addr2,
+        @required this.landmark,
         @required this.category,
         @required this.city,
-        //@required this.email,
+        @required this.email,
         @required this.fName,
         @required this.gstNo,
-        //@required this.lName,
-        //@required this.password,
+        @required this.lName,
+        @required this.password,
         @required this.ph,
         @required this.pinCode,
         @required this.shopImg,
         @required this.shopName,
-        @required this.upi  
+        @required this.upi,  
+        @required this.user,
       });
 
   void selectShop(BuildContext context)
   {
     Navigator.of(context).push(MaterialPageRoute(builder: (_){
-      return PaymentMode(upi,'DemoCustomerUpiId');
+      return PaymentMode(upi,user.upiId,user);
     }));
   }
 
-  String get categoryText
-  {
-    switch(category)
-    {
-      case Category.Restaurant:
-        return 'Restaurant';
-      case Category.Clothing:
-        return 'Clothing';
-      case Category.General:
-        return 'General';
-      case Category.Grocery:
-        return 'Grocery';
-      case Category.Medical:
-        return 'Medical';
-      case Category.Others:
-        return 'Others';
-      default:
-        return 'N.A';    
-    }
-  }
+  // String get categoryText
+  // {
+  //   switch(category)
+  //   {
+  //     case Category.Restaurant:
+  //       return 'Restaurant';
+  //     case Category.Clothing:
+  //       return 'Clothing';
+  //     case Category.General:
+  //       return 'General';
+  //     case Category.Grocery:
+  //       return 'Grocery';
+  //     case Category.Medical:
+  //       return 'Medical';
+  //     case Category.Others:
+  //       return 'Others';
+  //     default:
+  //       return 'N.A';    
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +107,7 @@ class ShopItem extends StatelessWidget {
                     children: <Widget>[
                       SizedBox(width: 2),
                       Text('Category: '),
-                      Text(categoryText,style: TextStyle(fontWeight: FontWeight.bold),),
+                      Text(category,style: TextStyle(fontWeight: FontWeight.bold),),
                     ],
                   ),
                   Row(
