@@ -27,14 +27,20 @@ The business side of the application will speak out the details of any new payme
 ## Work done till now
 - We have succesfully created the login and signup screens and itegrated that with the backend database.
 - Customer home page and side drawer is also implemeted.
-- Prototypes of business home screen is also ready. We are yet to integrate it with the backend. (External APIs used in this screen is in italics) 
+- Business home page analytics and sidebar is also implemented.
+- Payment process is also developed and implemented.
+- Added QR generator 
+- Prototypes of business home screen and customer analytics screen are also ready. 
 
 ## External APIs Used
 1. http - For Communication with server
 2. image_picker - For Shop Image
 3. url_launcher - For password reset link
-4. _pie_chart - To make and display pie charts_
-5. _charts_flutter - To make and display bar graphs_
+4. pie_chart - To make and display pie charts
+5. charts_flutter - To make and display bar graphs
+6. upi_flutter - to invoke UPI for transactions 
+7. barcode_scan - to scan qr codes generated 
+8. qr_flutter - to generate qr codes  
 
 ## Notes
 1. Credit is solely based on the discretion of shopkeeper. However, we do provide data like credit rating of the user to enable him to make the choice. The aim is to provide more features that the smaller businesses provide in the conventional way, so that it is easier for that demographic too to switch over to such digital mediums.
