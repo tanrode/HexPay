@@ -33,8 +33,8 @@ The business side of the application will speak out the details of any new payme
 1. http - For Communication with server
 2. image_picker - For Shop Image
 3. url_launcher - For password reset link
-4. _pie_chart - To make and display pie charts
-5. _charts_flutter - To make and display bar graphs
+4. _pie_chart - To make and display pie charts_
+5. _charts_flutter - To make and display bar graphs_
 
 ## Notes
 1. Credit is solely based on the discretion of shopkeeper. However, we do provide data like credit rating of the user to enable him to make the choice. The aim is to provide more features that the smaller businesses provide in the conventional way, so that it is easier for that demographic too to switch over to such digital mediums.
