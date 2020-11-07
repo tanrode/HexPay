@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import '../models/businessSideDrawer.dart';
+import 'package:sms/sms.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
 
 class BusinessHomePage extends StatefulWidget {
   BusinessHomePage({Key key, this.title,this.token,this.shopName}) : super(key: key);
@@ -25,10 +28,45 @@ class _BusinessHomePageState extends State<BusinessHomePage> {
   final controller = PageController(
     initialPage: 0,
   );
+  SmsReceiver receiver = new SmsReceiver();
+  FlutterTts flutterTts = FlutterTts();
+  String msg='';
+  String sender='';
+  List content=new List();
+  String upi='';
+  String username='';
+  List<String> upiID=[];
+  List<String> amount = [];
+  String am = '';
+  int x;
+  listenSMS()
+  {
+    receiver.onSmsReceived.listen((SmsMessage s) {
+      content=s.body.split(' ');
+      upiID=content.where((e) => e.contains('@')).toList();
+      amount = content.where((e) => e.contains('Rs')).toList();
+      if(s.address.compareTo('ADICICIB')==0)
+      {
+        setState(() async {
+          msg=s.body;
+          sender=s.address;
+          upi=content[content.length-1];
+          username=upiID[0].split('@')[0];
+          am = amount[0].substring(3);
+          await flutterTts.speak('Payment recieved, from: ' + username + ',Amount: ' + am);
+        });
+      }
 
+    });
+  }
+  fetchSMS() async
+  {
+    listenSMS();
+  }
 
   @override
   void initState() {
+    listenSMS();
     datatime.addAll({
       '10-12 noon': 3136,
       '12-2pm': 2241,
