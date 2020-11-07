@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import '../screens/custAnalytics.dart';
 import './user.dart';
+import '../screens/customerTransactionPage.dart';
+import '../screens/customerDuePage.dart';
 
 class SideDrawer extends StatelessWidget {
   final User user;
   SideDrawer(this.user);
+  void getDues(BuildContext ctx){
+    Navigator.of(ctx).push(new MaterialPageRoute(builder: (ctx1){
+      return CustomerDuePage(user.token);
+    }));
+  }
+
   void getAnalytics(BuildContext ctx)
   {
     Navigator.of(ctx).push(new MaterialPageRoute(builder: (ctx1){
@@ -14,12 +22,9 @@ class SideDrawer extends StatelessWidget {
 
   void getHistory(BuildContext ctx)
   {
-    
-  }
-
-  void getCredit(BuildContext ctx)
-  {
-    
+    Navigator.of(ctx).push(new MaterialPageRoute(builder: (ctx1){
+      return CustomerTransactionPage(user.token);
+    }));
   }
 
   @override
@@ -43,16 +48,16 @@ class SideDrawer extends StatelessWidget {
             ),),
           SizedBox(height: 20),
           ListTile(
+            onTap: () => getDues(context),
+            leading: Icon(Icons.show_chart,size: 24,), title: Text('Clear Dues',style: TextStyle(fontFamily: 'RobotoCondensed',fontSize:22,fontWeight: FontWeight.bold),),
+          ),
+          ListTile(
             onTap: () => getAnalytics(context),
             leading: Icon(Icons.show_chart,size: 24,), title: Text('Analytics',style: TextStyle(fontFamily: 'RobotoCondensed',fontSize:22,fontWeight: FontWeight.bold),),
           ),
           ListTile(
             onTap: () => getHistory(context),
             leading: Icon(Icons.attach_money,size: 24,), title: Text('Transaction History',style: TextStyle(fontFamily: 'RobotoCondensed',fontSize:22,fontWeight: FontWeight.bold),),
-          ),
-          ListTile(
-            onTap: () => getCredit(context),
-            leading: Icon(Icons.credit_card,size: 24,), title: Text('Purchases on Credit',style: TextStyle(fontFamily: 'RobotoCondensed',fontSize:22,fontWeight: FontWeight.bold),),
           ),
         ],
       ),

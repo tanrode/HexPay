@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
-import '../models/Transaction.dart';
+import '../models/transaction.dart';
 
 
 List<Transaction> transactions = List.generate(20, (index) {
   var random=new Random();
-  String name = "customer_upi@id";
+  String name = "upi@id";
   double amount = (random.nextInt(9) + 1) * 100.0;
   return Transaction(
       custUpiId: name,
@@ -22,25 +22,21 @@ List<Transaction> transactions = List.generate(20, (index) {
 //to be replaced with backend code
   ..sort((v1, v2) => v2.createdMillis - v1.createdMillis);
 
-class TransactionPage extends StatefulWidget {
-  final String token;
-  TransactionPage(this.token);
+class UndoPage extends StatefulWidget {
+  UndoPage({Key key}) : super(key: key);
   @override
-  _TransactionPageState createState() => _TransactionPageState(token);
+  _UndoPageState createState() => _UndoPageState();
 }
 
-class _TransactionPageState extends State<TransactionPage> {
-  final String token;
-  _TransactionPageState(this.token);
+class _UndoPageState extends State<UndoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         brightness: Theme.of(context).brightness,
-        //iconTheme: Theme.of(context).iconTheme,
         title: Text(
-          "Transaction History",
-          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),
+          "Select Transaction to Undo",
+          style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: Colors.orange[300],
@@ -69,7 +65,7 @@ class _TransactionPageState extends State<TransactionPage> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            showHeader
+            showHeader && dateString=='Today'
                 ? Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: Text(
@@ -81,6 +77,7 @@ class _TransactionPageState extends State<TransactionPage> {
               ),
             )
                 : Offstage(),
+            if(dateString=='Today')
             buildItem(index, context, date, transaction),
           ],
         );
@@ -125,27 +122,44 @@ class _TransactionPageState extends State<TransactionPage> {
         ),
         child: Row(
           children: <Widget>[
-            Expanded(
+            new Expanded(
               flex: 1,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: Text(
-                  transaction.custUpiId,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(color: Colors.white),
-                ),
-              ),
+              child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    new Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      child: Text(
+                        transaction.custUpiId,
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle2
+                            .copyWith(color: Colors.white),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      child: FlatButton(onPressed: (){}, child: Text('Undo',style: TextStyle(color: Colors.white)), color: Colors.black,),
+                    )
+                  ]),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: Text(
-                NumberFormat("Rs ###,###,####").format(transaction.amount),
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle2
-                    .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+            new Expanded(
+              flex: 1,
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  new Container(
+                    //alignment: Alignment.topRight,
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    child: Text(
+                      NumberFormat("Rs ###,###,####").format(transaction.amount),
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2
+                          .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

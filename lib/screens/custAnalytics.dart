@@ -101,6 +101,7 @@ class _CustAnalyticsState extends State<CustAnalytics> {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
                 ),
+                Text('Swipe left to view more Analytics'),                
                 SizedBox(
                   height: 20,
                 ),
@@ -118,15 +119,7 @@ class _CustAnalyticsState extends State<CustAnalytics> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Credit Rating\n$creditrating',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 20,
+                  height: 50,
                 ),
                 _loadChart ? PieChart(
                   dataMap: datacat,

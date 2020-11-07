@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/businessSideDrawer.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
 import '../models/Transaction.dart';
@@ -6,7 +7,7 @@ import '../models/Transaction.dart';
 
 List<Transaction> transactions = List.generate(20, (index) {
   var random=new Random();
-  String name = "customer_upi@id";
+  String name = "business_upi@id";
   double amount = (random.nextInt(9) + 1) * 100.0;
   return Transaction(
       custUpiId: name,
@@ -22,16 +23,16 @@ List<Transaction> transactions = List.generate(20, (index) {
 //to be replaced with backend code
   ..sort((v1, v2) => v2.createdMillis - v1.createdMillis);
 
-class TransactionPage extends StatefulWidget {
+class CustomerTransactionPage extends StatefulWidget {
   final String token;
-  TransactionPage(this.token);
+  CustomerTransactionPage(this.token);
   @override
-  _TransactionPageState createState() => _TransactionPageState(token);
+  _CustomerTransactionPageState createState() => _CustomerTransactionPageState(token);
 }
 
-class _TransactionPageState extends State<TransactionPage> {
+class _CustomerTransactionPageState extends State<CustomerTransactionPage> {
   final String token;
-  _TransactionPageState(this.token);
+  _CustomerTransactionPageState(this.token);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

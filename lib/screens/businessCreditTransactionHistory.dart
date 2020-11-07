@@ -1,14 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
-import '../models/Transaction.dart';
+import '../models/credit.dart';
 
 
-List<Transaction> transactions = List.generate(20, (index) {
+List<Credit> transactions = List.generate(20, (index) {
   var random=new Random();
-  String name = "customer_upi@id";
+  String name = "upi@id";
   double amount = (random.nextInt(9) + 1) * 100.0;
-  return Transaction(
+  return Credit(
+    credStatus: STATUS.accepted,
       custUpiId: name,
       amount: amount,
       createdMillis: DateTime.now()
@@ -20,27 +22,27 @@ List<Transaction> transactions = List.generate(20, (index) {
           .millisecondsSinceEpoch);
 })
 //to be replaced with backend code
+
   ..sort((v1, v2) => v2.createdMillis - v1.createdMillis);
 
-class TransactionPage extends StatefulWidget {
+class BusinessCreditTransactionPage extends StatefulWidget {
   final String token;
-  TransactionPage(this.token);
+  BusinessCreditTransactionPage(this.token);
   @override
-  _TransactionPageState createState() => _TransactionPageState(token);
+  _BusinessCreditTransactionPageState createState() => _BusinessCreditTransactionPageState(token);
 }
 
-class _TransactionPageState extends State<TransactionPage> {
+class _BusinessCreditTransactionPageState extends State<BusinessCreditTransactionPage> {
   final String token;
-  _TransactionPageState(this.token);
+  _BusinessCreditTransactionPageState(this.token);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         brightness: Theme.of(context).brightness,
-        //iconTheme: Theme.of(context).iconTheme,
         title: Text(
-          "Transaction History",
-          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),
+          "Credits Aprroved & Due",
+          style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
         backgroundColor: Colors.orange[300],
@@ -55,40 +57,47 @@ class _TransactionPageState extends State<TransactionPage> {
     return ListView.builder(
       itemCount: transactions.length,
       itemBuilder: (context, index) {
-        Transaction transaction = transactions[index];
-        DateTime date =
-        DateTime.fromMillisecondsSinceEpoch(transaction.createdMillis);
-        String dateString = DateFormat("EEE, MMM d, y").format(date);
-        if (today == dateString) {
-          dateString = "Today";
-        } else if (yesterday == dateString) {
-          dateString = "Yesteday";
-        }
-        bool showHeader = prevDay != dateString;
-        prevDay = dateString;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            showHeader
-                ? Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: Text(
-                dateString,
-                style: Theme.of(context).textTheme.subtitle2.copyWith(
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.bold,
+        Credit transaction = transactions[index];
+          DateTime date =
+          DateTime.fromMillisecondsSinceEpoch(transaction.createdMillis);
+          String dateString = DateFormat("EEE, MMM d, y").format(date);
+          if (today == dateString) {
+            dateString = "Today";
+          } else if (yesterday == dateString) {
+            dateString = "Yesteday";
+          }
+          bool showHeader = prevDay != dateString;
+          prevDay = dateString;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              showHeader
+                  ? Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: Text(
+                  dateString,
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .subtitle2
+                      .copyWith(
+                    color: Theme
+                        .of(context)
+                        .primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            )
-                : Offstage(),
-            buildItem(index, context, date, transaction),
-          ],
-        );
-      },
+              )
+                  : Offstage(),
+              if(transaction.credStatus==STATUS.accepted)
+              buildItem(index, context, date, transaction),
+            ],
+          );
+        }
     );
   }
   Widget buildItem(int index,
-      BuildContext context, DateTime date, Transaction transaction) {
+      BuildContext context, DateTime date, Credit transaction) {
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -115,13 +124,14 @@ class _TransactionPageState extends State<TransactionPage> {
       ),
     );
   }
-  Card buildItemInfo(Transaction transaction, BuildContext context) {
+  Card buildItemInfo(Credit transaction, BuildContext context) {
     return Card(
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-              colors:[Colors.green, Colors.teal]),
+              colors: [Colors.redAccent, Colors.red]
+          ),
         ),
         child: Row(
           children: <Widget>[

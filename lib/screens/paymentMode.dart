@@ -6,7 +6,7 @@ class PaymentMode extends StatelessWidget {
   final String merchantUpiId;
   final String custUpiId;
   final User user;
-  PaymentMode(this.custUpiId,this.merchantUpiId,this.user);
+  PaymentMode(this.merchantUpiId,this.custUpiId,this.user);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

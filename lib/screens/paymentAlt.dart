@@ -145,7 +145,7 @@ class _PaymentAltState extends State<PaymentAlt> {
                 Container(
                   margin: EdgeInsets.only(bottom: 12),
                   child: Text(
-                    'Pay Using',
+                    'UPI Payments',
                     style: Theme.of(context).textTheme.caption,
                   ),
                 ),
@@ -157,18 +157,18 @@ class _PaymentAltState extends State<PaymentAlt> {
                     setState((){
                       data = onValue;
                     });
-                      http.Response resp;
-                      resp = await http.post('https://omi123.pythonanywhere.com/api/transactions/make_transaction',
-                        headers: <String,String>{
-                          'Content-Type': 'application/json; charset=UTF-8',
-                          'Authorisation': 'Token '+widget.user.token,
-                        },
-                        body: json.encode({
-                          'to': merchantUpiId,
-                          'amount': amount,
-                          'transaction_id': data.substring(data.lastIndexOf('=')+1),
-                        })
-                      ).then((value) => null);
+                      // http.Response resp;
+                      // resp = await http.post('https://omi123.pythonanywhere.com/api/transactions/make_transaction',
+                      //   headers: <String,String>{
+                      //     'Content-Type': 'application/json; charset=UTF-8',
+                      //     'Authorisation': 'Token '+widget.user.token,
+                      //   },
+                      //   body: json.encode({
+                      //     'to': merchantUpiId,
+                      //     'amount': amount,
+                      //     'transaction_id': data.substring(data.lastIndexOf('=')+1),
+                      //   })
+                      // ).then((value) => null);
                       //print(data);
                     });
                 },
@@ -176,11 +176,11 @@ class _PaymentAltState extends State<PaymentAlt> {
                   width: 150,
                   height: 50,
                   color: Colors.grey,
-                  child: Center(child: Text("tap to pay")),
+                  child: Center(child: Text("Proceed To Pay")),
                 ),
               ),
-              SizedBox(height: 10,),
-              Text(data,style: TextStyle(color: Colors.black,fontSize: 20),)
+              // SizedBox(height: 10,),
+              // Text(data,style: TextStyle(color: Colors.black,fontSize: 20),)
               ],
             ),
           )

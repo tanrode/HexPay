@@ -16,7 +16,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final shopList = const[
+  bool _isLoading=true;
+  var shopList = [
     Shop(
       fName: 'Rakesh',
       lName: 'Verma',
@@ -81,22 +82,17 @@ class _HomePageState extends State<HomePage> {
   Future getShops() async
   {
     final shops = await http.get('https://omi123.pythonanywhere.com/api/user/get_shops');
-    //final currUser = json.decode(users.body) as Map<String, dynamic>;
-    print(json.decode(shops.body));
-    dynamic currShop = json.decode(shops.body);
-    // currShop.forEach((element) { 
-    //   print(element);
-    // });
-    //print(currShop);
-    // currUser.forEach((key, value) {
-    //   if(value['uid'] == uid)
-    //   {
-    //     print(value['name']);
-    //     return User(uid: uid,name: value['name'],phNo: value['phNo'],email: value['email'],password: value['password']);
-    //     // return cUser;
-    //     //return value;
-    //   }
-    // });
+    final shopMap = json.decode(shops.body) as Map<String,dynamic>;
+    print(shopMap);
+    //print(shopList['shops'][0]['phone']);
+    for(int i=0;i<shopMap['shops'].length;i++)
+    {
+      //{status: successful, shops: [{phone: 1111111111, upi_id: omkar.masur@okicici, first_name: t, shop: {shop_name: trs, city: blr, pin_code: 560002, landmark: hal, type_of_business: Clothing}}, {phone: 7774446661, upi_id: sahil@okhdfcbank, first_name: Sahil, shop: {shop_name: Singh da dhaba, city: Bangalore, pin_code: 560002, landmark: SAP, type_of_business: Restaurant}}]}
+      shopList.add(Shop(landmark: shopMap['shops'][i]['shop']['landmark'], category: shopMap['shops'][i]['shop']['type_of_business'], city: shopMap['shops'][i]['shop']['city'], email: 'test@tmail.com', fName: shopMap['shops'][i]['first_name'], gstNo: '123456789012345', lName: 'Singh', password: 'pwd', ph: shopMap['shops'][i]['phone'], pinCode: shopMap['shops'][i]['shop']['pincode'], shopImg: 'img', shopName: shopMap['shops'][i]['shop']['shop_name'], upi: shopMap['shops'][i]['upi_id']));
+    }
+    setState(() {
+      _isLoading=false;
+    });
   }
   void initState()
   {
@@ -123,7 +119,7 @@ class _HomePageState extends State<HomePage> {
       drawer: SideDrawer(widget.user),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
+        child: _isLoading ? Center(child: CircularProgressIndicator()) : SingleChildScrollView(
                   child: Column(
             children: <Widget>[
               Container(

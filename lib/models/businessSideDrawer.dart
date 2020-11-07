@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../screens/businessTransactionHistory.dart';
-// import 'package:business/Screens/home.dart';
-// import 'package:business/Screens/credit_transactions.dart';
-// import 'package:business/Screens/pendingTransactions.dart';
+import '../screens/businessUndoPayment.dart';
+import '../screens/businessCreditTransactionHistory.dart';
+import '../screens/businessCreditRequestPending.dart';
+
 
 class BusinessSideDrawer extends StatelessWidget {
   final String token;
@@ -10,16 +11,16 @@ class BusinessSideDrawer extends StatelessWidget {
   BusinessSideDrawer(this.token,this.shopName);
   void getPending(BuildContext ctx)
   {
-    // Navigator.of(ctx).push(MaterialPageRoute(builder: (_){
-    //   return PendingCreditTransactionPage(token);
-    // }));
+    Navigator.of(ctx).push(MaterialPageRoute(builder: (_){
+      return PendingCreditTransactionPage(token);
+    }));
   }
 
   void getUndo(BuildContext ctx)
   {
-    // Navigator.of(ctx).pushReplacement(MaterialPageRoute(builder: (_){
-    //   return TabsScreen();
-    // }));
+    Navigator.of(ctx).push(MaterialPageRoute(builder: (_){
+      return UndoPage(token);
+    }));
   }
 
   void getHistory(BuildContext ctx)
@@ -31,9 +32,9 @@ class BusinessSideDrawer extends StatelessWidget {
 
   void getCredit(BuildContext ctx)
   {
-    //  Navigator.of(ctx).push(MaterialPageRoute(builder: (_){
-    //    return CreditTransactionPage(token);
-    //  }));
+    Navigator.of(ctx).push(MaterialPageRoute(builder: (_){
+      return BusinessCreditTransactionPage(token);
+    }));
   }
 
   @override
