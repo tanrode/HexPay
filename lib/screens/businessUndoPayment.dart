@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hexPay/screens/paymentAlt.dart';
 import 'package:intl/intl.dart';
+import '../models/user.dart';
+import 'package:upi_flutter/upi_flutter.dart';
 import 'dart:math';
 import '../models/transaction.dart';
 import 'package:http/http.dart' as http;
@@ -42,6 +45,7 @@ class _UndoPageState extends State<UndoPage> {
       ))
           .millisecondsSinceEpoch)];
   bool _isLoading=true;
+  String data;
   Future _getTransactions()async
   {
     final transactions = await http.get('https://omi123.pythonanywhere.com/api/transactions/get_transactions', headers: <String,String>{
@@ -62,6 +66,21 @@ class _UndoPageState extends State<UndoPage> {
       _isLoading=false;
     });
   }
+
+  Future<String> _initiateTransaction(String app,double amt,String custUpi) async {
+    UpiFlutter upi = new UpiFlutter(
+      receiverUpiId: custUpi,
+      receiverName: 'TestName',
+      transactionRefId: 'TestingId',
+      transactionNote: 'Test Transaction',
+      amount: amt,
+    );
+
+    String response = await upi.startTransaction();
+
+    return response;
+  }
+
   void initState()
   {
     _getTransactions();
@@ -177,7 +196,15 @@ class _UndoPageState extends State<UndoPage> {
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                      child: FlatButton(onPressed: (){}, child: Text('Undo'),color: Colors.white,),
+                      child: FlatButton(onPressed: (){
+                        final transactionRef = Random.secure().nextInt(1 << 32).toString();
+                        print("Starting transaction with id $transactionRef");
+                        _initiateTransaction('8105508136@ybl',transaction.amount,transaction.custUpiId).then((onValue)async{
+                          setState(() {
+                            data = onValue;
+                          });
+                        });
+                      }, child: Text('Undo'),color: Colors.white,),
                     )
                   ]),
             ),
