@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import '../models/businessSideDrawer.dart';
+import 'package:barcode_scan/barcode_scan.dart';
+import 'package:sms/sms.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class BusinessHomePage extends StatefulWidget {
   BusinessHomePage({Key key, this.title,this.token,this.shopName}) : super(key: key);
@@ -25,10 +30,47 @@ class _BusinessHomePageState extends State<BusinessHomePage> {
   final controller = PageController(
     initialPage: 0,
   );
+  
+  SmsReceiver receiver = new SmsReceiver();
+  FlutterTts flutterTts = FlutterTts();
+  String msg='';
+  String sender='';
+  List content=new List();
+  String upi='';
+  String username='';
+  List<String> upiID=[];
+  List<String> amount = [];
+  String am = '';
+  int x;
+  listenSMS()
+  {
+    receiver.onSmsReceived.listen((SmsMessage s) {
+      content=s.body.split(' ');
+      upiID=content.where((e) => e.contains('@')).toList();
+      amount = content.where((e) => e.contains('Rs')).toList();
+      if(s.address.compareTo('ADICICIB')==0)
+      {
+        setState(() async {
+          msg=s.body;
+          sender=s.address;
+          upi=content[content.length-1];
+          username=upiID[0].split('@')[0];
+          am = amount[0].substring(3);
+          await flutterTts.speak('Payment recieved, from: ' + username + ',Amount: ' + am);
+        });
+      }
 
+    });
+  }
+  fetchSMS() async
+  {
+    listenSMS();
+  }
+  String qrCodeResult;
 
   @override
   void initState() {
+    fetchSMS();
     datatime.addAll({
       '10-12 noon': 3136,
       '12-2pm': 2241,
@@ -80,6 +122,44 @@ class _BusinessHomePageState extends State<BusinessHomePage> {
         title: Text('Home Page'),
         centerTitle: true,
         backgroundColor: Colors.orange[300],
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.camera_alt),
+              onPressed: ()async{
+                List<String> qrData;
+                ScanResult codeScanner;
+                codeScanner = await BarcodeScanner.scan(
+                  options: ScanOptions(
+                    useCamera: -1,
+                  ),
+                ).then((value){
+                  setState(()async{
+                    qrCodeResult = codeScanner.rawContent;
+                    qrData = qrCodeResult.split(' ');
+                    print(qrData);
+                    http.Response resp;
+                          resp = await http.post('https://omi123.pythonanywhere.com/api/transactions/make_transaction',
+                            headers: <String,String>{
+                              'Content-Type': 'application/json; charset=UTF-8',
+                              'Authorization': 'Token '+token,
+                            },
+                            body: json.encode({
+                              'to': qrData[1],
+                              'amount': double.parse(qrData[2]),
+                              'transaction_id': qrData[3],
+                            })
+                          ).then((value){
+                            print(value.body);
+                    });
+                  });
+                }); //barcode scanner
+                
+                
+                
+                      print(data);
+                //custUpiId+' '+merchantUpiId+' '+amount.toString()+' '+data.substring(data.lastIndexOf('=')+1)
+              }),
+        ],
       ),
       drawer: BusinessSideDrawer(token,shopName),
       body: Center(

@@ -154,22 +154,24 @@ class _PaymentAltState extends State<PaymentAlt> {
                   final transactionRef = Random.secure().nextInt(1 << 32).toString();
                   print("Starting transaction with id $transactionRef");
                   _initiateTransaction('8105508136@ybl').then((onValue)async{
-                    setState((){
-                      data = onValue;
-                    });
-                      // http.Response resp;
-                      // resp = await http.post('https://omi123.pythonanywhere.com/api/transactions/make_transaction',
-                      //   headers: <String,String>{
-                      //     'Content-Type': 'application/json; charset=UTF-8',
-                      //     'Authorisation': 'Token '+widget.user.token,
-                      //   },
-                      //   body: json.encode({
-                      //     'to': merchantUpiId,
-                      //     'amount': amount,
-                      //     'transaction_id': data.substring(data.lastIndexOf('=')+1),
-                      //   })
-                      // ).then((value) => null);
-                      //print(data);
+                      setState(() {
+                        data = onValue;
+                      });
+                      http.Response resp;
+                      resp = await http.post('https://omi123.pythonanywhere.com/api/transactions/make_transaction',
+                        headers: <String,String>{
+                          'Content-Type': 'application/json; charset=UTF-8',
+                          'Authorization': 'Token '+widget.user.token,
+                        },
+                        body: json.encode({
+                          'to': merchantUpiId,
+                          'amount': amount,
+                          'transaction_id': data.substring(data.lastIndexOf('=')+1),
+                        })
+                      ).then((value){
+                        print(value.body);
+                      });
+                      print(data);
                     });
                 },
                 child: Container(

@@ -41,7 +41,7 @@ class _BusinessCreditTransactionPageState extends State<BusinessCreditTransactio
       appBar: AppBar(
         brightness: Theme.of(context).brightness,
         title: Text(
-          "Credits Aprroved & Due",
+          "Credits Approved & Due",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,

@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import '../models/businessSideDrawer.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
 import '../models/Transaction.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-
-List<Transaction> transactions = List.generate(20, (index) {
-  var random=new Random();
-  String name = "business_upi@id";
-  double amount = (random.nextInt(9) + 1) * 100.0;
-  return Transaction(
-      custUpiId: name,
-      amount: amount,
-      createdMillis: DateTime.now()
-          .add(Duration(
-        days: -random.nextInt(7),
-        hours: -random.nextInt(23),
-        minutes: -random.nextInt(59),
-      ))
-          .millisecondsSinceEpoch);
-})
-//to be replaced with backend code
-  ..sort((v1, v2) => v2.createdMillis - v1.createdMillis);
+// List<Transaction> transactions = List.generate(20, (index) {
+//   var random=new Random();
+//   String name = "business_upi@id";
+//   double amount = (random.nextInt(9) + 1) * 100.0;
+//   return Transaction(
+//       custUpiId: name,
+//       amount: amount,
+//       createdMillis: DateTime.now()
+//           .add(Duration(
+//         days: -random.nextInt(7),
+//         hours: -random.nextInt(23),
+//         minutes: -random.nextInt(59),
+//       ))
+//           .millisecondsSinceEpoch);
+// })
+// //to be replaced with backend code
+//   ..sort((v1, v2) => v2.createdMillis - v1.createdMillis);
 
 class CustomerTransactionPage extends StatefulWidget {
   final String token;
@@ -33,6 +33,40 @@ class CustomerTransactionPage extends StatefulWidget {
 class _CustomerTransactionPageState extends State<CustomerTransactionPage> {
   final String token;
   _CustomerTransactionPageState(this.token);
+  static var random=new Random();
+  List<Transaction> transList=[Transaction(amount: 500.0,custUpiId: 'v.tanmay13@okicici',createdMillis: DateTime.now()
+          .add(Duration(
+        days: -random.nextInt(7),
+        hours: -random.nextInt(23),
+        minutes: -random.nextInt(59),
+      ))
+          .millisecondsSinceEpoch)];
+  bool _isLoading=true;
+  Future _getTransactions()async
+  {
+    final transactions = await http.get('https://omi123.pythonanywhere.com/api/transactions/get_transactions', headers: <String,String>{
+      'Authorization' : 'Token '+token,
+    });
+    final transactionsMap = json.decode(transactions.body) as Map<String,dynamic>;
+    print(transactionsMap);
+    print(transactionsMap['transactions']);
+    for(int i=0;i<transactionsMap['transactions'].length;i++)
+    {
+      print(transactionsMap['transactions'][i]['by']['upi_id']);
+      print(transactionsMap['transactions'][i]['amount']);
+      print(transactionsMap['transactions'][i]['time']);
+      //{status: successful, shops: [{phone: 1111111111, upi_id: omkar.masur@okicici, first_name: t, shop: {shop_name: trs, city: blr, pin_code: 560002, landmark: hal, type_of_business: Clothing}}, {phone: 7774446661, upi_id: sahil@okhdfcbank, first_name: Sahil, shop: {shop_name: Singh da dhaba, city: Bangalore, pin_code: 560002, landmark: SAP, type_of_business: Restaurant}}]}
+      transList.add(Transaction(custUpiId: transactionsMap['transactions'][i]['to'],amount: double.parse((transactionsMap['transactions'][i]['amount']).toString()), createdMillis: DateTime.parse(transactionsMap['transactions'][i]['time']).millisecondsSinceEpoch));
+    }
+    setState(() {
+      _isLoading=false;
+    });
+  }
+  void initState()
+  {
+    _getTransactions();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +80,7 @@ class _CustomerTransactionPageState extends State<CustomerTransactionPage> {
         centerTitle: true,
         backgroundColor: Colors.orange[300],
       ),
-      body: buildListView(),
+      body: _isLoading ? Center(child: CircularProgressIndicator()) : buildListView(),
     );
   }
   ListView buildListView() {
@@ -54,9 +88,9 @@ class _CustomerTransactionPageState extends State<CustomerTransactionPage> {
     String today = DateFormat("EEE, MMM d, y").format(DateTime.now());
     String yesterday = DateFormat("EEE, MMM d, y").format(DateTime.now().add(Duration(days: -1)));
     return ListView.builder(
-      itemCount: transactions.length,
+      itemCount: transList.length,
       itemBuilder: (context, index) {
-        Transaction transaction = transactions[index];
+        Transaction transaction = transList[index];
         DateTime date =
         DateTime.fromMillisecondsSinceEpoch(transaction.createdMillis);
         String dateString = DateFormat("EEE, MMM d, y").format(date);

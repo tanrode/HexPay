@@ -95,7 +95,7 @@ class _AuthScreenState extends State<AuthScreen> {
     }
 
     return Scaffold(
-          appBar: AppBar(title: Text('EasyPay',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),centerTitle: true,backgroundColor: Colors.orange[300],),
+          appBar: AppBar(title: Text('HexPay',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),centerTitle: true,backgroundColor: Colors.orange[300],),
           backgroundColor: Colors.white,
           body: Center(
       child: Card(
